@@ -1,44 +1,92 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f5f1;
+  --foreground: #1c1917;
+  --brand-ink: #1c1917;
+  --brand-amber: #d97706;
+  --brand-amber-soft: #f59e0b;
+  --surface: #ffffff;
+  --muted: #78716c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-noto-sans-tc), "Noto Sans TC", sans-serif;
+  --font-display: var(--font-outfit), var(--font-noto-sans-tc), sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
+
+.font-display {
+  font-family: var(--font-display);
+}
+
 input,
 select,
 textarea {
   background-color: #ffffff;
-  color: #111827;          /* 深灰近黑,文字睇得清 */
+  color: #111827;
   border: 1px solid #d1d5db;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #9ca3af;          /* 淺灰 placeholder */
+  color: #9ca3af;
 }
 
-/* select 下拉選項 */
 select option {
   color: #111827;
   background-color: #ffffff;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.anim-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.anim-fade-up-delay-1 {
+  animation: fade-up 0.7s ease-out 0.12s both;
+}
+
+.anim-fade-up-delay-2 {
+  animation: fade-up 0.7s ease-out 0.24s both;
+}
+
+.anim-glow {
+  animation: soft-pulse 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-up-delay-1,
+  .anim-fade-up-delay-2,
+  .anim-glow {
+    animation: none;
+  }
 }

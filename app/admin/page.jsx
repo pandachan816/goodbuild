@@ -9,7 +9,7 @@ import {
 
 const TABS = [
   { key: 'projects', label: '工程案例', icon: LayoutGrid },
-  { key: 'team', label: '團隊成員', icon: Users },
+  { key: 'team', label: '星級團隊', icon: Users },
   { key: 'settings', label: '網站設定', icon: SettingsIcon },
   { key: 'inquiries', label: '查詢名單', icon: Inbox },
 ];
@@ -44,7 +44,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-slate-50">
       {/* 頂部 */}
       <header className="bg-slate-900 text-white px-4 sm:px-6 py-4 flex items-center justify-between">
-        <h1 className="font-bold text-lg">PRIME BUILD 管理後台</h1>
+        <h1 className="font-bold text-lg">管理後台</h1>
         <button
           onClick={logout}
           className="flex items-center gap-1.5 text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition"
@@ -250,7 +250,7 @@ function ProjectsTab() {
     </div>
    ); 
 }
-/* ============ 團隊成員 ============ */
+/* ============ 星級團隊 ============ */
 function TeamTab() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -291,7 +291,7 @@ function TeamTab() {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm p-5 space-y-4">
-        <h2 className="font-semibold text-slate-800">新增團隊成員</h2>
+        <h2 className="font-semibold text-slate-800">新增星級團隊</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           <input placeholder="姓名" value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -306,7 +306,7 @@ function TeamTab() {
             onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })}
             className="px-3 py-2 rounded-lg border border-slate-200" />
           <label className="flex items-center gap-2 text-sm text-slate-600 border border-dashed border-slate-300 rounded-lg px-3 py-2 cursor-pointer sm:col-span-2">
-            <ImageIcon size={16} /> {imgFile ? imgFile.name : '成員相片'}
+            <ImageIcon size={16} /> {imgFile ? imgFile.name : '團隊相片'}
             <input type="file" accept="image/*" className="hidden"
               onChange={(e) => setImgFile(e.target.files[0])} />
           </label>
@@ -629,6 +629,11 @@ function SettingsTab() {
 }
 
 /* ============ 查詢名單 ============ */
+const SERVICE_TYPE_LABELS = {
+  match: '團隊工程報價',
+  general: '一般查詢',
+};
+
 function InquiriesTab() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -649,22 +654,34 @@ function InquiriesTab() {
   if (loading) return <Loader2 className="animate-spin text-slate-400" />;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-      <table className="w-full text-sm">
+    <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
+      <table className="w-full text-sm min-w-[720px]">
         <thead className="bg-slate-50 text-slate-500 text-left">
           <tr>
             <th className="px-4 py-3">時間</th>
+            <th className="px-4 py-3">服務類型</th>
+            <th className="px-4 py-3">服務主題</th>
+            <th className="px-4 py-3">稱呼</th>
             <th className="px-4 py-3">電話</th>
             <th className="px-4 py-3">面積</th>
+            <th className="px-4 py-3">備註</th>
             <th className="px-4 py-3">狀態</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
           {list.map((q) => (
             <tr key={q.id}>
-              <td className="px-4 py-3 text-slate-500">{new Date(q.created_at).toLocaleString('zh-HK')}</td>
+              <td className="px-4 py-3 text-slate-500 whitespace-nowrap">{new Date(q.created_at).toLocaleString('zh-HK')}</td>
+              <td className="px-4 py-3 text-slate-700">
+                {SERVICE_TYPE_LABELS[q.service_type] || q.service_type || '-'}
+              </td>
+              <td className="px-4 py-3 text-slate-700 whitespace-nowrap">{q.topic || '-'}</td>
+              <td className="px-4 py-3 text-slate-700">{q.name || '-'}</td>
               <td className="px-4 py-3 font-medium text-slate-800">{q.phone}</td>
-              <td className="px-4 py-3 text-slate-600">{q.area || '-'}</td>
+              <td className="px-4 py-3 text-slate-600 whitespace-nowrap">{q.area || '-'}</td>
+              <td className="px-4 py-3 text-slate-500 max-w-[200px] truncate" title={q.notes || ''}>
+                {q.notes || '-'}
+              </td>
               <td className="px-4 py-3">
                 <button onClick={() => toggle(q.id, q.followed_up)}
                   className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs ${
@@ -676,7 +693,7 @@ function InquiriesTab() {
             </tr>
           ))}
           {list.length === 0 && (
-            <tr><td colSpan={4} className="px-4 py-8 text-center text-slate-400">未有查詢</td></tr>
+            <tr><td colSpan={8} className="px-4 py-8 text-center text-slate-400">未有查詢</td></tr>
           )}
         </tbody>
       </table>

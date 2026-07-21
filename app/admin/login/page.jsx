@@ -34,7 +34,7 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center">
             <Lock className="text-white" size={22} />
           </div>
-          <h1 className="text-xl font-bold text-slate-800">PRIME BUILD 後台</h1>
+          <h1 className="text-xl font-bold text-slate-800">管理後台</h1>
           <p className="text-sm text-slate-400">管理員登入</p>
         </div>
 
