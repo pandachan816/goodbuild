@@ -4,8 +4,8 @@ import { supabase } from '@/lib/supabase';
 import {
   Phone, MessageCircle, Mail, MapPin, Clock,
   ShieldCheck, ArrowRight, Menu, X, ZoomIn,
-  UserCheck, Handshake, ClipboardList, ChevronDown,
-  Home, Wrench, Building2, Clock3
+  UserCheck, ClipboardList, ChevronDown,
+  CheckCircle2, XCircle, HardHat, CalendarCheck
 } from 'lucide-react';
 
 /** 每位團隊可提供嘅服務（簡短） */
@@ -16,47 +16,44 @@ const TEAM_SERVICES = {
   4: ['微水泥牆地', '特色飾面', '翻新塗層'],
   5: ['玻璃隔斷', '不銹鋼欄杆', '訂造五金'],
   6: ['打拆清運', '垃圾處理', '結構清拆'],
-  7: ['智能家居', '系統整合', '場景控制'],
+  7: ['商舖／辦公室設計', '品牌空間規劃', '商業效果圖'],
   8: ['棚架搭建', '冷氣安裝', '外牆支援'],
 };
 
 /** 查詢表單：8 大服務主題（fallback，優先用 team.role） */
 const DEFAULT_TOPICS = [
   '住宅室內設計',
+  '商業室內設計',
   '水電工程',
   '泥水油漆',
   '微水泥總代理',
   '不銹鋼玻璃工程',
   '清拆工程',
-  '物聯網系統',
   '棚架及冷氣工程',
 ];
 
 /** 表單顯示用：將職位名轉成服務主題 */
 const TOPIC_ALIASES = {
   首席室內設計師: '住宅室內設計',
+  商業室內設計師: '商業室內設計',
 };
 
 const FAQ_ITEMS = [
   {
-    q: '你哋同一般裝修平台有咩分別？',
-    a: 'GoodBuild 唔係公開大量公司嘅配對平台。只介紹認識、信得過嘅 8 個星級團隊，寧願少而精，方便跟進質素同溝通。',
+    q: '點解揀 GOODBUILD？',
+    a: '八大專業範疇自家團隊、清晰報價、專人跟進、進度每日更新，完工後仲有保養維修保障，令你安心完成理想空間。',
   },
   {
     q: '如何取得報價？',
-    a: '室內設計、物聯網系統等，需要約時間見面，充分了解需求同詳細講解後先報價。清拆、搭棚、工程維護、泥水翻新等，一般可先憑相片／短片提供初步報價；如有需要，師傅再到場觀察後先作正式報價。',
+    a: '可預約免費上門睇位。住宅／商業室內設計等，需要約時間見面詳細講解後先報價；清拆、搭棚、泥水翻新等，一般可先憑相片／短片提供初步報價，如有需要再到場作正式報價。',
   },
   {
-    q: '點解只介紹 8 個星級團隊？',
-    a: '每個團隊都係 GoodBuild 合作多年的友好合作伙伴，默契十足，值得信賴推介嘅對象。',
+    q: '工程會唔會超支、拖期？',
+    a: '我哋以清晰報價同透明施工流程為原則，簽約前講清楚範圍同金額；開工後專人監工、每日跟進進度，減少超支同拖期風險。',
   },
   {
-    q: '介紹之後會點樣跟進？',
-    a: '了解需求後對口介紹合適團隊報價；有需要可約睇手工。開工後如有溝通問題，亦可協助協調。',
-  },
-  {
-    q: '一定要用你哋介紹嘅團隊嗎？',
-    a: '唔使。你可以先傾、先比較；覺得合適先至決定。',
+    q: '邊啲工程可以做？',
+    a: '住宅全屋翻新、局部改造、商舖裝修，以及水電、泥水油漆、清拆、傢俬、棚架冷氣等專業工種。',
   },
   {
     q: '提交之後幾耐有人覆？',
@@ -98,11 +95,11 @@ export default function HomePage() {
   const brand = settings.company_name || '';
 
   const nav = [
+    { label: '點解揀我哋', id: 'about' },
     { label: '星級團隊', id: 'team' },
-    { label: '點樣運作', id: 'flow' },
+    { label: '工程流程', id: 'flow' },
     { label: '工程案例', id: 'projects' },
-    { label: '常見問題', id: 'faq' },
-    { label: '立即查詢', id: 'quote' },
+    { label: '免費報價', id: 'quote' },
   ];
 
   function go(id) {
@@ -177,48 +174,54 @@ export default function HomePage() {
             <div className="h-48 sm:h-72 mb-6" aria-hidden />
           )}
           <p className="text-amber-400 font-medium tracking-[0.2em] text-xs sm:text-sm mb-5 anim-fade-up-delay-1">
-            {ready ? (settings.slogan || '私人推薦 · 工種對口 · 跟進到完工') : '\u00A0'}
+            {ready ? (settings.slogan || '透明報價 · 準時交付 · 全程專人監工') : '\u00A0'}
           </p>
           <h1 className="font-display text-3xl sm:text-5xl font-bold leading-tight max-w-3xl mx-auto anim-fade-up-delay-1">
-            介紹信得過嘅
-            <br className="sm:hidden" />
-            <span className="text-amber-400">星級團隊</span>
-            做你嘅裝修
+            一站式裝修工程團隊
           </h1>
-          <p className="mt-5 text-stone-300 max-w-xl mx-auto text-sm sm:text-base anim-fade-up-delay-2">
-            8 個專業團隊——按工種對口，全程有人跟進。報價重要，但搵對人先至係關鍵。
+          <p className="mt-4 text-stone-200 max-w-2xl mx-auto text-sm sm:text-base anim-fade-up-delay-2">
+            住宅全屋翻新｜局部改造｜商舖裝修
           </p>
+          <div className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-stone-300 anim-fade-up-delay-2">
+            {['正規牌照', '清晰報價', '售後保障'].map((t) => (
+              <span key={t} className="inline-flex items-center gap-1.5">
+                <CheckCircle2 size={16} className="text-amber-400 shrink-0" />
+                {t}
+              </span>
+            ))}
+          </div>
           <div className="mt-9 flex flex-wrap gap-3 justify-center anim-fade-up-delay-2">
             <button
               onClick={() => goQuote('match')}
               className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold px-6 py-3.5 rounded-lg flex items-center gap-2 transition shadow-lg shadow-amber-900/30"
             >
-              介紹星級團隊 <ArrowRight size={18} />
+              免費上門睇位報價 <ArrowRight size={18} />
             </button>
             <button
-              onClick={() => go('team')}
+              onClick={() => go('projects')}
               className="border border-white/35 hover:bg-white/10 px-6 py-3.5 rounded-lg transition"
             >
-              先睇團隊
+              睇工程案例
             </button>
           </div>
         </div>
       </section>
 
-      {/* ===== 點解搵我哋 ===== */}
+      {/* ===== 點解揀 GOODBUILD ===== */}
       <section id="about" className="max-w-6xl mx-auto px-4 py-16 sm:py-20">
         <div className="text-center mb-10">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold">唔係亂配公司，係私人推薦</h2>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold">為什麼選擇 GOODBUILD？</h2>
           <p className="text-stone-500 mt-2 text-sm sm:text-base">
-            同公開配對平台唔同：我哋以人為本，少而精，跟到完工。
+            成交導向、工程落地——讓你安心開工、準時交樓。
           </p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-6">
           {[
-            { icon: Handshake, t: '熟人背書', d: '每個團隊都係認識、有信心推介嘅對象。' },
-            { icon: UserCheck, t: '工種對口', d: '全屋、局部、水電泥水傢俬——按需要介紹，唔亂配。' },
-            { icon: ShieldCheck, t: '跟進到完工', d: '唔止介紹完就散；開工後有需要可協助溝通協調。' },
-            { icon: ClipboardList, t: '真實案例', d: '完工相、前後對比，睇得到手工再決定。' },
+            { icon: HardHat, t: '八大專業範疇', d: '自家團隊覆蓋設計、水電、泥水、傢俬等核心工種。' },
+            { icon: CalendarCheck, t: '10+年工程經驗', d: '住宅翻新、局部改造、商舖裝修經驗豐富。' },
+            { icon: UserCheck, t: '專人跟進', d: '每個項目有專人負責，唔使自己追進度。' },
+            { icon: ClipboardList, t: '進度每日更新', d: '施工過程透明，讓你清楚知道工程去到邊。' },
+            { icon: ShieldCheck, t: '保養維修保障', d: '完工後有售後支援，出問題有人跟。' },
           ].map((c, i) => {
             const Icon = c.icon;
             return (
@@ -234,34 +237,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== 咩人需要幫手 ===== */}
+      {/* ===== 痛點 ===== */}
       <section className="bg-stone-100/80 py-16 sm:py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="font-display text-2xl sm:text-3xl font-bold">邊類客人需要我哋幫手？</h2>
-            <p className="text-stone-500 mt-2 text-sm sm:text-base">
-              如果你係以下其中一種，我哋可以幫到你。
-            </p>
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold">裝修最怕</h2>
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {['超支', '拖期', '無人跟進', '手工粗糙'].map((pain) => (
+              <div key={pain} className="flex flex-col items-center gap-2 py-4">
+                <XCircle className="text-red-500" size={28} />
+                <span className="font-medium text-stone-800">{pain}</span>
+              </div>
+            ))}
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-            {[
-              { icon: Home, t: '第一次裝修', d: '唔知邊個信得過，想有人幫忙對口介紹靠譜團隊。' },
-              { icon: Wrench, t: '局部／單一工種', d: '只要清拆、水電、泥水、搭棚等，需要專門團隊處理。' },
-              { icon: Building2, t: '住宅・商鋪・工商廈', d: '唔同物業類型都想搵對口專業，一次講清楚需求。' },
-              { icon: Clock3, t: '忙到冇時間逐間問', d: '唔想自己冷呼叫好多間；想有人跟進到報價同開工。' },
-            ].map((c, i) => {
-              const Icon = c.icon;
-              return (
-                <div key={i} className="text-center sm:text-left">
-                  <div className="w-11 h-11 rounded-full bg-stone-900 flex items-center justify-center mb-4 mx-auto sm:mx-0">
-                    <Icon className="text-amber-400" size={20} />
-                  </div>
-                  <h3 className="font-display font-bold text-lg">{c.t}</h3>
-                  <p className="text-stone-500 text-sm mt-2 leading-relaxed">{c.d}</p>
-                </div>
-              );
-            })}
-          </div>
+          <p className="mt-8 text-stone-600 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+            GOODBUILD 以「清晰報價＋透明施工流程」，
+            讓每位業主安心完成理想空間。
+          </p>
+          <button
+            onClick={() => goQuote('match')}
+            className="mt-8 bg-stone-900 hover:bg-stone-800 text-white font-semibold px-6 py-3 rounded-lg inline-flex items-center gap-2 transition"
+          >
+            免費上門睇位報價 <ArrowRight size={18} />
+          </button>
         </div>
       </section>
 
@@ -269,8 +266,8 @@ export default function HomePage() {
       <section id="team" className="bg-stone-950 text-white py-16 sm:py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="font-display text-2xl sm:text-3xl font-bold">星級團隊</h2>
-            <p className="text-stone-400 mt-2">只介紹認識、信得過嘅團隊——每項專長同可提供服務如下</p>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold">八大專業範疇 · 星級團隊</h2>
+            <p className="text-stone-400 mt-2">自家團隊覆蓋全屋翻新所需核心工種</p>
           </div>
           {team.length === 0 ? (
             <p className="text-center text-stone-500">暫未載入團隊資料</p>
@@ -316,7 +313,7 @@ export default function HomePage() {
               onClick={() => goQuote('match')}
               className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold px-6 py-3 rounded-lg inline-flex items-center gap-2 transition"
             >
-              馬上取得報價 <ArrowRight size={18} />
+              免費上門睇位報價 <ArrowRight size={18} />
             </button>
           </div>
         </div>
@@ -325,15 +322,16 @@ export default function HomePage() {
       {/* ===== 點樣運作 ===== */}
       <section id="flow" className="max-w-6xl mx-auto px-4 py-16 sm:py-20">
         <div className="text-center mb-12">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold">點樣運作</h2>
-          <p className="text-stone-500 mt-2">四步完成，清楚簡單</p>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold">工程流程</h2>
+          <p className="text-stone-500 mt-2">五步完成，清楚簡單</p>
         </div>
-        <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <ol className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
           {[
-            { n: '01', t: '講低你嘅需要', d: '填表或 WhatsApp，說明單位、範圍同期望。' },
-            { n: '02', t: '對口介紹團隊', d: '按工種同個案，介紹合適星級團隊。' },
-            { n: '03', t: '報價／睇手工', d: '安排報價；有需要可約完工單位睇手工。' },
-            { n: '04', t: '跟進到完工', d: '決定合作後，有需要可協助溝通協調。' },
+            { n: '01', t: '免費上門睇位', d: '實地了解單位狀況同你嘅需要。' },
+            { n: '02', t: '3日內出詳細報價', d: '清晰列明工程範圍同金額。' },
+            { n: '03', t: '簽約後排期', d: '確認範圍後安排開工時間。' },
+            { n: '04', t: '專人監工每日跟進', d: '進度透明，有問題即時溝通。' },
+            { n: '05', t: '驗收交樓', d: '完工驗收，售後保養有保障。' },
           ].map((s) => (
             <li key={s.n} className="relative">
               <span className="font-display text-4xl font-extrabold text-amber-500/30">{s.n}</span>
@@ -349,7 +347,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="font-display text-2xl sm:text-3xl font-bold">工程案例</h2>
-            <p className="text-stone-500 mt-2">星級團隊完工實例（拉動睇前後對比）</p>
+            <p className="text-stone-500 mt-2">真實前後對比，睇得到手工先決定</p>
           </div>
 
           <div className="flex justify-center gap-2 mb-8 flex-wrap">
@@ -384,7 +382,7 @@ export default function HomePage() {
       <section id="faq" className="max-w-3xl mx-auto px-4 py-16 sm:py-20">
         <div className="text-center mb-10">
           <h2 className="font-display text-2xl sm:text-3xl font-bold">常見問題</h2>
-          <p className="text-stone-500 mt-2">關於私人推薦同跟進</p>
+          <p className="text-stone-500 mt-2">關於報價、流程同保障</p>
         </div>
         <div className="space-y-2">
           {FAQ_ITEMS.map((item, i) => (
@@ -409,10 +407,10 @@ export default function HomePage() {
           <div>
             <h3 className="font-display text-white font-bold text-lg">{ready ? (brand || 'Good Build') : '\u00A0'}</h3>
             <p className="text-sm mt-2 text-stone-400">
-              {ready ? (settings.slogan || '私人推薦星級團隊，跟進到完工。') : '\u00A0'}
+              {ready ? (settings.slogan || '透明報價 · 準時交付 · 全程專人監工') : '\u00A0'}
             </p>
             {settings.license_no && (
-              <p className="text-xs mt-3 text-stone-500">牌照號碼：{settings.license_no}</p>
+              <p className="text-xs mt-3 text-stone-500">牌照／註冊號碼：{settings.license_no}</p>
             )}
           </div>
           <div className="space-y-2 text-sm">
@@ -452,8 +450,11 @@ export default function HomePage() {
             {settings.youtube && (
               <a href={settings.youtube} className="hover:text-amber-400">YouTube</a>
             )}
-            <button onClick={() => go('quote')} className="text-left hover:text-amber-400 mt-2">
-              立即查詢
+            <a href="/landing" className="hover:text-amber-400 mt-2">
+              廣告專用報價頁
+            </a>
+            <button onClick={() => go('quote')} className="text-left hover:text-amber-400">
+              免費上門睇位報價
             </button>
           </div>
         </div>
@@ -708,9 +709,9 @@ function QuoteForm({ serviceType, setServiceType, whatsapp, topics = DEFAULT_TOP
     <section id="quote" className="bg-stone-900 text-white py-16 sm:py-24">
       <div className="max-w-xl mx-auto px-4">
         <div className="text-center mb-8">
-          <h2 className="font-display text-2xl sm:text-3xl font-bold">立即查詢</h2>
+          <h2 className="font-display text-2xl sm:text-3xl font-bold">免費上門睇位報價</h2>
           <p className="text-stone-300 mt-2 text-sm sm:text-base">
-            填好資料，一按即用 WhatsApp 聯絡我哋
+            留低資料，一個工作天內 WhatsApp 聯絡你
           </p>
         </div>
 
@@ -821,7 +822,7 @@ function QuoteForm({ serviceType, setServiceType, whatsapp, topics = DEFAULT_TOP
             className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold py-3.5 rounded-lg flex items-center justify-center gap-2 transition"
           >
             <MessageCircle size={20} />
-            用 WhatsApp 查詢
+            用 WhatsApp 預約免費報價
           </button>
 
           <p className="text-xs text-stone-400 text-center">

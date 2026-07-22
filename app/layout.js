@@ -14,9 +14,10 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "星級團隊私人推薦｜裝修專案跟進｜Good Build",
+  title: "GoodBuild",
   description:
-    "只介紹認識、信得過的星級團隊，按工種對口配對，並可跟進至完工。已有報價亦可在簽約前幫忙睇清楚條款。",
+    "GoodBuild 一站式裝修工程團隊：住宅全屋翻新、局部改造、商舖裝修。透明報價、專人監工、售後保障。免費上門睇位報價。",
+  applicationName: "GoodBuild",
 };
 
 export default function RootLayout({ children }) {
